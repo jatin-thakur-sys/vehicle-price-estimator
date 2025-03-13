@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Price Predictor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: conic-gradient(from 225deg, #141e30, #243b55);
+            text-align: center;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            overflow-y: auto; /* Enable scrolling */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        /* INTRO ANIMATION */
+        .intro {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            transition: opacity 1s ease-in-out;
+            z-index: 10;
+        }
+
+        .intro.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            width: 100%;
+            max-width: 700px;
+            margin-top: 100px;
+        }
+
+        .main-content.show {
+            opacity: 1;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.3);
+            color: white;
+            backdrop-filter: blur(10px);
+            margin-bottom: 50px; /* Add spacing at the bottom */
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            color:black;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        select:focus, input:focus {
+            border-color: #FE4365;
+            outline: none;
+        }
+
+        select option {
+            background: rgba(20, 30, 48, 0.9);
+            color:rgb(106, 104, 105);
+            font-weight: bold;
+        }
+
+        button {
+            background: #FE4365;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #FC9D9A;
+        }
+
+        h2 {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 50px;
+            border-radius: 10px;
+            font-size:50px;
+
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Intro Section -->
+    <div class="intro" id="intro">
+        <h1>Welcome to Car Price Predictor</h1>
+        <p>Using Machine Learning to predict car prices accurately.</p>
+        <p>Our model considers brand, model, year, fuel type, mileage, and more!</p>
+        <p>Loading...</p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="main-content">
+        <div class="container">
+            <h2>Car Price Predictor</h2>
+            <form>
+                <label for="brand">Select the company:</label>
+                <select id="brand" name="brand">
+                    <option value="" selected disabled>Choose Brand</option>
+                    {% for i in companies %}
+                    <option value="{{i}}">{{i}}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="models">Select the model:</label>
+                <select id="models" name="models">
+                    <option value="" selected disabled>Choose Model</option>
+                    {% for i in models %}
+                    <option value="{{i}}">{{i}}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="year">Select Year of Purchase:</label>
+                <select id="year" name="year">
+                    <option value="" selected disabled>Select Year</option>
+                    {% for i in year %}
+                    <option value="{{i}}">{{i}}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="fuel">Select the Fuel Type:</label>
+                <select id="fuel" name="fuel">
+                    <option value="" selected disabled>Choose Fuel Type</option>
+                    {% for i in fuel %}
+                    <option value="{{i}}">{{i}}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="engine_size">Select Engine Size:</label>
+                <input type="number" name="engine_size" id="engine_size" required>
+
+                <label for="transmission">Select Transmission Type:</label>
+                <select id="transmission" name="transmission">
+                    <option value="" selected disabled>Choose Transmission</option>
+                    {% for i in transmission %}
+                    <option value="{{i}}">{{i}}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="doors">Select Number of Doors:</label>
+                <select id="doors" name="doors">
+                    <option value="" selected disabled>Choose Doors</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+
+                <label for="owner_count">Select Number of Previous Owners:</label>
+                <select id="owner_count" name="owner">
+                    <option value="" selected disabled>Choose Owners</option>
+                    {% for i in owner %}
+                    <option value="{{i}}">{{i}}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="mileage">Enter the Number of Kilometers the car has traveled:</label>
+                <input type="number" name="mileage" id="mileage" required>
+
+                <button type="submit" onclick="send_data()">Predict Price</button>
+            </form>
+            <br>
+
+            <div class="row">
+                <div class="col-12" style="text-align:center">
+                    <h3><span id="prediction"></span></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Hide intro after 2 seconds and show main content
+        setTimeout(() => {
+            document.getElementById("intro").classList.add("hide");
+            document.getElementById("main-content").classList.add("show");
+        }, 2000);
+
+        function send_data() {
+            event.preventDefault(); // Prevent form from refreshing
+    
+            let formData = {
+                "Company": document.getElementById("brand").value,
+                "Model": document.getElementById("models").value,
+                "Year": parseInt(document.getElementById("year").value),
+                "Fuel_Type": document.getElementById("fuel").value,
+                "Engine_Size": parseFloat(document.getElementById("engine_size").value),
+                "Transmission": document.getElementById("transmission").value,
+                "Doors": parseInt(document.getElementById("doors").value),
+                "Owner": parseInt(document.getElementById("owner_count").value),
+                "Mileage": parseInt(document.getElementById("mileage").value)
+            };
+    
+            fetch("/predict", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("prediction").innerHTML = 
+                    data.predicted_price ? "Estimated Price: $" + data.predicted_price : "Error: " + data.error;
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+
+</body>
+</html>
