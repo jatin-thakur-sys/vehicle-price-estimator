@@ -1,6 +1,5 @@
 import pandas as pd
 import pickle
-import os 
 from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
@@ -9,7 +8,7 @@ app = Flask(__name__)
 model = pickle.load(open("car_price_prediction.pkl", "rb"))
 
 # Load dataset to get unique values for dropdowns
-df = pd.read_csv(r"C:\Users\Lenovo\Downloads\car_price_dataset.csv")
+df = pd.read_csv("car_price_dataset.csv")
 companies = df['Brand'].unique().tolist()
 models = df['Model'].unique().tolist()
 years = sorted(df['Year'].unique().tolist(), reverse=True)
@@ -48,11 +47,6 @@ def predict():
 
     except Exception as e:
         return jsonify({"error": str(e)})
-    
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Get current directory
-DATA_PATH = os.path.join(BASE_DIR, "car_price_dataset.csv")  # File path
-
-df = pd.read_csv(DATA_PATH) 
 
 if __name__ == "__main__":
     app.run(debug=True)
